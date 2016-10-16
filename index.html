@@ -1,0 +1,109 @@
+<!doctype html >
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>IEPR</title>
+        <!--<link rel="stylesheet" href="css/normalize.css">-->
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/razorflow.min.css">
+        <link rel="stylesheet" href="css/dashboard.css">
+
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/razorflow.min.js"></script>
+        <script type="text/javascript" src="js/razorflow.devtools.min.js"></script>
+
+        <script type="text/javascript" src="js/endpoints.iepr.js"></script>
+        
+        <script type="text/javascript" src="js/dashboard_app.js"></script>
+
+        <script type='text/javascript'>
+            $(function() {
+                readGraphs();
+
+                $( "select#graphs" )
+                    .change(function () {
+                        
+                        var nDataSet = '';
+
+                        $( "select#graphs option:selected" ).each(function() {
+                            nDataSet = $( this ).attr('value');
+                        });
+                        var endPoint = '';
+                        var aFields = [];
+                        value = "";
+                        $.each(datasets, function(indx, valor) {
+                            if (indx == nDataSet) {
+                                endPoint = valor.endPoint;
+                                aFields = valor.startField;
+                                $('#xAxis').attr('value', valor.xAxis);
+                                $('#nFields').attr('value', valor.startField.length);
+                                $('#yField').attr('value', valor.startField[valor.startField.length - 1]);
+                            }
+                        });
+                        serverEndPoint = server + endPoint;
+                        var fields = '';
+                        $('#fields').html( fields );
+                        $('#endPoint').attr('value', serverEndPoint);
+                        $.getJSON(serverEndPoint , function (data) {
+                            $.each(data[0], function(index, value) {
+                                if ($.inArray(index, aFields) < 0)  {
+                                    fields += ("<option value='" + index + "'>" + index + "</option>");
+                                }
+                            });
+                            $('#fields').html( fields );
+                        });
+                        
+                        
+                }).change();
+
+                $( "#doGraph" ).click (function() {
+                    $('#filters').css('display','none');
+                    $('#graphViewer').css('display','block');
+                    drawGraphic();
+                });
+
+            });
+        </script>
+
+
+    </head>  
+    <body>
+        <!-- Don't delete this div. This is where RazorFlow will get rendered. -->
+   
+
+            <div id='filters' style="position:relative;" >
+                <div id='posibleGraphs'>
+                    <label>Gráficas Disponibles</label><br>
+                    <select id='graphs' size="10"></select>
+                </div>
+                <div id='dataGraphs'>
+                    <label>Datos a Gráficar</label><br>
+                    <select id='fields' size="10" multiple></select>
+                </div>
+                <div id='graphTypes'>
+                    <label>Tipo de Gráfica</label><br>
+                    <select id='graphType' size="3" >
+                        <option value='column' selected>Columna</option>
+                        <option value='line'>Líneal</option>
+                        <option value='bar'>Barra</option>
+                    </select><br>
+                    <input type='number' id='cohorte' value='5'> 
+                </div>
+                <div id='action'>
+                    <input type='hidden' id='endPoint' value=''>
+                    <input type='hidden' id='xAxis' value=''>
+                    <input type='hidden' id='nFields' value=''>
+                    <input type='hidden' id='yField' value=''>
+
+                    <button id='doGraph'  class="btn  btn-primary">Realizar Gráfica</button>
+                </div>
+            </div>
+            <br>
+            <div id='graphViewer'>
+                <div id="dbTarget" style="position:relative;" class="rf"></div>
+            </div>
+
+    </body>
+</html>

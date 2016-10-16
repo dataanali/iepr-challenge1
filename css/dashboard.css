@@ -1,0 +1,42 @@
+body {
+    background-color: #efefef;
+}
+
+#filters {
+    width: 78%;
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 30px;
+    background-color: white;
+}
+#posibleGraphs {
+    margin-top: 10px;
+}
+#posibleGraphs, #dataGraphs, #graphTypes {
+    margin-left: 8%;
+}
+#action {
+    margin-top: 20px;
+    width: 100%;
+    border-top: 1px solid gray;
+    text-align: right;
+}
+label {
+  margin-top: 10px;  
+}
+#doGraph{
+    margin-right: 10%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+#graphs, #fields {
+    width: 90%;
+}
+
+
+
+
+#graphViewer {
+    display: none;
+}
